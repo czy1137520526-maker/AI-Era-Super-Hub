@@ -3,1062 +3,1031 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎬 ManjuFlow AI - 漫剧制作工作台</title>
+    <title>🤖 AI Era Super-Hub — 国内外AI模型导航</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* ================================================
+           基础重置 & 布局
+           ================================================ */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1426 100%);
-            color: #e0e0e0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0d1117;
+            color: #e6edf3;
             min-height: 100vh;
-            overflow: hidden;
         }
+        a { color: #58a6ff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
 
-        .stars {
-            position: fixed;
+        /* ================================================
+           顶部 Header
+           ================================================ */
+        header {
+            background: rgba(13,17,23,0.95);
+            border-bottom: 1px solid #21262d;
+            padding: 0 24px;
+            position: sticky;
             top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
+            z-index: 100;
         }
-
-        .star {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle 3s infinite;
-        }
-
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
-        }
-
-        .container {
+        .header-inner {
+            max-width: 1400px;
+            margin: 0 auto;
             display: flex;
-            height: 100vh;
+            align-items: center;
+            gap: 16px;
+            height: 60px;
+        }
+        .logo {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            white-space: nowrap;
+        }
+        .logo span { color: #58a6ff; }
+
+        /* ================================================
+           搜索栏
+           ================================================ */
+        .search-wrap {
+            flex: 1;
+            max-width: 600px;
             position: relative;
-            z-index: 1;
         }
-
-        .sidebar {
-            width: 250px;
-            background: rgba(15, 20, 38, 0.6);
-            backdrop-filter: blur(10px);
-            border-right: 1px solid rgba(100, 150, 255, 0.2);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .sidebar-header {
-            padding: 16px;
-            border-bottom: 1px solid rgba(100, 150, 255, 0.2);
-        }
-
-        .sidebar-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: #6496ff;
-        }
-
-        .sidebar-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 12px;
-        }
-
-        .btn-new-project {
+        .search-wrap input {
             width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #6496ff, #9664ff);
+            padding: 8px 16px 8px 40px;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            color: #e6edf3;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .search-wrap input:focus { border-color: #58a6ff; }
+        .search-wrap .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            opacity: 0.6;
+        }
+        .search-hint {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 11px;
+            color: #8b949e;
+            pointer-events: none;
+        }
+
+        /* ================================================
+           地区筛选 Tab
+           ================================================ */
+        .region-tabs {
+            display: flex;
+            gap: 4px;
+            background: #161b22;
+            border-radius: 6px;
+            padding: 3px;
+        }
+        .region-tabs button {
+            padding: 5px 14px;
             border: none;
-            border-radius: 6px;
-            color: white;
+            border-radius: 4px;
+            background: transparent;
+            color: #8b949e;
             font-size: 13px;
-            font-weight: 600;
             cursor: pointer;
-            margin-bottom: 12px;
-            transition: all 0.3s;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .region-tabs button.active {
+            background: #30363d;
+            color: #fff;
+        }
+        .region-tabs button:hover:not(.active) { color: #e6edf3; }
+
+        /* ================================================
+           主内容区
+           ================================================ */
+        .main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
         }
 
-        .btn-new-project:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(100, 150, 255, 0.3);
-        }
-
-        .project-item {
-            padding: 10px 12px;
-            background: rgba(100, 150, 255, 0.05);
-            border: 1px solid rgba(100, 150, 255, 0.1);
-            border-radius: 6px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 12px;
-        }
-
-        .project-item:hover {
-            background: rgba(100, 150, 255, 0.15);
-            border-color: rgba(100, 150, 255, 0.3);
-        }
-
-        .project-item.active {
-            background: linear-gradient(135deg, rgba(100, 150, 255, 0.3), rgba(150, 100, 255, 0.2));
-            border-color: #6496ff;
-            color: #ffffff;
-        }
-
-        .main-content {
-            flex: 1;
+        /* ================================================
+           提交按钮
+           ================================================ */
+        .submit-bar {
             display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 12px;
-            padding: 16px 20px;
-            border-bottom: 1px solid rgba(100, 150, 255, 0.2);
-            background: rgba(15, 20, 38, 0.4);
-            backdrop-filter: blur(10px);
-        }
-
-        .tab {
-            padding: 8px 16px;
-            background: rgba(100, 150, 255, 0.1);
-            border: 1px solid rgba(100, 150, 255, 0.2);
-            border-radius: 20px;
-            color: #a0a0ff;
-            cursor: pointer;
-            font-size: 12px;
-            transition: all 0.3s;
-        }
-
-        .tab:hover {
-            background: rgba(100, 150, 255, 0.2);
-        }
-
-        .tab.active {
-            background: linear-gradient(135deg, #6496ff, #9664ff);
-            border-color: #6496ff;
-            color: white;
-        }
-
-        .content-area {
-            flex: 1;
-            display: flex;
-            overflow: hidden;
-        }
-
-        .panel {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: none;
-        }
-
-        .panel.active {
-            display: block;
-        }
-
-        .form-group {
+            justify-content: flex-end;
             margin-bottom: 20px;
         }
-
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #a0a0ff;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 10px 12px;
-            background: rgba(100, 150, 255, 0.05);
-            border: 1px solid rgba(100, 150, 255, 0.2);
-            border-radius: 6px;
-            color: #e0e0e0;
-            font-size: 13px;
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        .form-input:focus {
-            outline: none;
-            background: rgba(100, 150, 255, 0.1);
-            border-color: #6496ff;
-            box-shadow: 0 0 12px rgba(100, 150, 255, 0.2);
-        }
-
-        .character-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .character-tag {
-            padding: 8px 12px;
-            background: rgba(100, 150, 255, 0.1);
-            border: 1px solid rgba(100, 150, 255, 0.3);
-            border-radius: 20px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .character-tag:hover {
-            background: rgba(100, 150, 255, 0.2);
-            border-color: #6496ff;
-        }
-
-        .character-tag.selected {
-            background: linear-gradient(135deg, #6496ff, #9664ff);
-            border-color: #6496ff;
-            color: white;
-        }
-
-        .template-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 10px;
-        }
-
-        .template-card {
-            padding: 15px;
-            background: rgba(100, 150, 255, 0.05);
-            border: 1px solid rgba(100, 150, 255, 0.1);
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-        }
-
-        .template-card:hover {
-            background: rgba(100, 150, 255, 0.15);
-            border-color: #6496ff;
-            transform: translateY(-4px);
-        }
-
-        .template-icon {
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
-
-        .template-name {
-            font-size: 12px;
-            font-weight: 600;
-            color: #6496ff;
-            margin-bottom: 5px;
-        }
-
-        .template-desc {
-            font-size: 11px;
-            color: #a0a0ff;
-        }
-
-        .option-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .option-btn {
-            padding: 8px 12px;
-            background: rgba(100, 150, 255, 0.1);
-            border: 1px solid rgba(100, 150, 255, 0.2);
-            border-radius: 6px;
-            color: #a0a0ff;
-            cursor: pointer;
-            font-size: 12px;
-            transition: all 0.3s;
-        }
-
-        .option-btn:hover {
-            background: rgba(100, 150, 255, 0.2);
-            border-color: #6496ff;
-        }
-
-        .option-btn.selected {
-            background: linear-gradient(135deg, #6496ff, #9664ff);
-            border-color: #6496ff;
-            color: white;
-        }
-
-        .right-panel {
-            width: 280px;
-            background: rgba(15, 20, 38, 0.6);
-            backdrop-filter: blur(10px);
-            border-left: 1px solid rgba(100, 150, 255, 0.2);
-            padding: 16px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .btn-generate {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #6496ff, #9664ff);
+        .btn-submit {
+            padding: 8px 18px;
+            background: linear-gradient(135deg, #238636, #2ea043);
             border: none;
             border-radius: 6px;
-            color: white;
-            font-size: 14px;
+            color: #fff;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 12px;
+            transition: all 0.2s;
+        }
+        .btn-submit:hover {
+            background: linear-gradient(135deg, #2ea043, #3fb950);
+            transform: translateY(-1px);
         }
 
-        .btn-generate:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(100, 150, 255, 0.4);
+        /* ================================================
+           双栏布局（全部视图）
+           ================================================ */
+        .dual-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
         }
+        .column-section { display: flex; flex-direction: column; gap: 12px; }
 
-        .btn-action {
+        .column-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             padding: 10px 16px;
-            background: rgba(100, 150, 255, 0.1);
-            border: 1px solid rgba(100, 150, 255, 0.2);
-            border-radius: 6px;
-            color: #a0a0ff;
-            cursor: pointer;
-            font-size: 12px;
-            transition: all 0.3s;
+            background: #161b22;
+            border-radius: 8px;
+            border-left: 3px solid;
+        }
+        .column-header.cn { border-color: #f85149; }
+        .column-header.global { border-color: #58a6ff; }
+        .column-header h2 { font-size: 15px; font-weight: 600; }
+        .column-header .count {
+            margin-left: auto;
+            background: #30363d;
+            color: #8b949e;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 12px;
         }
 
-        .btn-action:hover {
-            background: rgba(100, 150, 255, 0.2);
-            border-color: #6496ff;
+        /* ================================================
+           分类标签行
+           ================================================ */
+        .category-row {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 4px;
+        }
+        .category-label {
+            font-size: 11px;
+            color: #8b949e;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 4px 0;
         }
 
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: none;
+        /* ================================================
+           模型卡片
+           ================================================ */
+        .card {
+            background: #161b22;
+            border: 1px solid #21262d;
+            border-radius: 8px;
+            padding: 14px 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .card:hover {
+            border-color: #30363d;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+        }
+        .card-top {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        .card-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1000;
+            font-size: 18px;
+            flex-shrink: 0;
         }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: linear-gradient(135deg, rgba(15, 20, 38, 0.95), rgba(30, 40, 70, 0.95));
-            border: 1px solid rgba(100, 150, 255, 0.3);
-            border-radius: 12px;
-            padding: 24px;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 0 20px 60px rgba(100, 150, 255, 0.2);
-        }
-
-        .modal-header {
-            font-size: 16px;
+        .card-info { flex: 1; min-width: 0; }
+        .card-name {
+            font-size: 14px;
             font-weight: 600;
-            color: #ffffff;
-            margin-bottom: 20px;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-
-        .modal-body {
-            margin-bottom: 20px;
-        }
-
-        .modal-footer {
+        .card-meta {
             display: flex;
+            gap: 6px;
+            margin-top: 3px;
+        }
+        .card-badge {
+            font-size: 10px;
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .badge-cn { background: rgba(248,81,73,0.15); color: #f85149; }
+        .badge-global { background: rgba(88,166,255,0.15); color: #58a6ff; }
+        .card-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+        .card-tag {
+            font-size: 10px;
+            padding: 2px 6px;
+            background: #21262d;
+            color: #8b949e;
+            border-radius: 4px;
+        }
+        .card-desc {
+            font-size: 12px;
+            color: #8b949e;
+            line-height: 1.5;
+            margin-top: 6px;
+        }
+        .card-links {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .card-link {
+            font-size: 11px;
+            padding: 3px 10px;
+            border-radius: 4px;
+            background: #21262d;
+            color: #58a6ff;
+            cursor: pointer;
+            transition: background 0.2s;
+            border: none;
+        }
+        .card-link:hover { background: #30363d; text-decoration: none; }
+
+        /* 卡片悬停编辑/报错按钮 */
+        .card-actions {
+            display: none;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            gap: 4px;
+        }
+        .card:hover .card-actions { display: flex; }
+        .card-action-btn {
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: none;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+        .card-action-btn:hover { opacity: 1; }
+        .btn-edit { background: #30363d; color: #e6edf3; }
+        .btn-report { background: #30363d; color: #f85149; }
+
+        /* ================================================
+           单列布局（筛选视图）
+           ================================================ */
+        .single-column { display: flex; flex-direction: column; gap: 12px; }
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 12px;
-            justify-content: flex-end;
         }
 
+        /* ================================================
+           空状态
+           ================================================ */
+        .empty-state {
+            text-align: center;
+            padding: 48px;
+            color: #8b949e;
+        }
+        .empty-state .emoji { font-size: 48px; margin-bottom: 12px; }
+        .empty-state p { font-size: 14px; }
+
+        /* ================================================
+           Modal 弹窗
+           ================================================ */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 520px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1px solid #21262d;
+        }
+        .modal-header h3 { font-size: 16px; color: #fff; }
+        .modal-close {
+            background: none;
+            border: none;
+            color: #8b949e;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 4px;
+            line-height: 1;
+        }
+        .modal-close:hover { color: #fff; }
+        .modal-body { padding: 20px; }
+
+        /* ================================================
+           表单
+           ================================================ */
+        .form-group { margin-bottom: 16px; }
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #8b949e;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .form-label .required { color: #f85149; margin-left: 2px; }
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 8px 12px;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            color: #e6edf3;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: #58a6ff; }
+        .form-textarea { resize: vertical; min-height: 80px; }
+        .form-select { cursor: pointer; }
+
+        .tag-checkboxes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .tag-checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            color: #8b949e;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .tag-checkbox-label input { display: none; }
+        .tag-checkbox-label.checked {
+            background: rgba(88,166,255,0.15);
+            border-color: #58a6ff;
+            color: #58a6ff;
+        }
+        .form-note {
+            font-size: 11px;
+            color: #8b949e;
+            margin-top: 4px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+        .btn-cancel {
+            padding: 8px 18px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            color: #e6edf3;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .btn-cancel:hover { background: #30363d; }
         .btn-primary {
-            padding: 10px 20px;
-            background: linear-gradient(135deg, #6496ff, #9664ff);
+            padding: 8px 18px;
+            background: linear-gradient(135deg, #238636, #2ea043);
             border: none;
             border-radius: 6px;
-            color: white;
+            color: #fff;
             font-size: 13px;
             font-weight: 600;
             cursor: pointer;
+            transition: all 0.2s;
         }
+        .btn-primary:hover { background: linear-gradient(135deg, #2ea043, #3fb950); }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(100, 150, 255, 0.3);
-        }
-
-        .btn-secondary {
-            padding: 10px 20px;
-            background: rgba(100, 150, 255, 0.1);
-            border: 1px solid rgba(100, 150, 255, 0.2);
-            border-radius: 6px;
-            color: #a0a0ff;
-            font-size: 13px;
-            cursor: pointer;
-        }
-
-        .btn-secondary:hover {
-            background: rgba(100, 150, 255, 0.2);
-            border-color: #6496ff;
-        }
-
-        .status-message {
+        /* ================================================
+           Toast 提示
+           ================================================ */
+        .toast {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 12px 20px;
-            background: rgba(100, 150, 255, 0.9);
-            color: white;
-            border-radius: 6px;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #2ea043;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
             font-size: 13px;
-            z-index: 2000;
-            max-width: 300px;
-            animation: slideIn 0.3s ease;
+            font-weight: 500;
+            z-index: 300;
+            transition: transform 0.3s ease;
+            white-space: nowrap;
         }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+        .toast.warn { background: #9e6a03; }
 
-        @keyframes slideIn {
-            from {
-                transform: translateX(400px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+        /* ================================================
+           统计栏
+           ================================================ */
+        .stats-bar {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+            font-size: 12px;
+            color: #8b949e;
         }
+        .stats-bar strong { color: #e6edf3; }
 
-        .progress-bar {
-            width: 100%;
-            height: 4px;
-            background: rgba(100, 150, 255, 0.1);
-            border-radius: 2px;
-            overflow: hidden;
-            margin-top: 10px;
+        /* ================================================
+           响应式
+           ================================================ */
+        @media (max-width: 900px) {
+            .dual-columns { grid-template-columns: 1fr; }
+            .tools-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
         }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #6496ff, #9664ff);
-            animation: progress 3s ease-in-out forwards;
+        @media (max-width: 600px) {
+            .header-inner { flex-wrap: wrap; height: auto; padding: 10px 0; gap: 8px; }
+            .search-wrap { order: 3; max-width: 100%; width: 100%; }
+            .region-tabs { gap: 2px; }
+            .region-tabs button { padding: 4px 10px; font-size: 12px; }
+            .main { padding: 16px; }
+            .tools-grid { grid-template-columns: 1fr; }
+            .stats-bar { flex-direction: column; gap: 4px; }
         }
-
-        @keyframes progress {
-            from { width: 0%; }
-            to { width: 100%; }
+        @media (max-width: 380px) {
+            .region-tabs button { padding: 4px 8px; font-size: 11px; }
         }
     </style>
 </head>
 <body>
-    <div class="stars" id="stars"></div>
-    
-    <div class="container">
-        <!-- 左侧栏 -->
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <div class="sidebar-title">📁 项目</div>
-            </div>
-            <div class="sidebar-content">
-                <button class="btn-new-project" onclick="createNewProject()">+ 新建项目</button>
-                <div id="projects-list"></div>
-            </div>
+
+<!-- ========== Header ========== -->
+<header>
+    <div class="header-inner">
+        <div class="logo">🤖 <span>AI Era</span> Super-Hub</div>
+
+        <div class="search-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" placeholder="搜索模型名称、简介、标签或地区..." autocomplete="off">
+            <span class="search-hint">按 Enter 发送 / Esc 清空</span>
         </div>
 
-        <!-- 中间内容区 -->
-        <div class="main-content">
-            <div class="tabs">
-                <button class="tab active" onclick="switchTab(1)">📝 故事编辑</button>
-                <button class="tab" onclick="switchTab(2)">👥 角色配置</button>
-                <button class="tab" onclick="switchTab(3)">⚙️ 参数调整</button>
-                <button class="tab" onclick="switchTab(4)">🎨 高级选项</button>
-            </div>
-
-            <div class="content-area">
-                <!-- 第1步：故事编辑 -->
-                <div class="panel active" id="panel-1">
-                    <div class="form-group">
-                        <label class="form-label">📖 故事内容</label>
-                        <textarea class="form-input" id="story-input" placeholder="在这里输入您的漫剧故事..." style="min-height: 200px;"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">🎯 推荐角色</label>
-                        <div class="character-list" id="recommended-chars"></div>
-                    </div>
-                    <button class="btn-action" onclick="optimizeStory('expand')">✨ 扩展故事</button>
-                    <button class="btn-action" onclick="optimizeStory('simplify')">📌 简化故事</button>
-                </div>
-
-                <!-- 第2步：角色配置 -->
-                <div class="panel" id="panel-2">
-                    <div class="form-group">
-                        <label class="form-label">✅ 已选角色</label>
-                        <div class="character-list" id="selected-chars"></div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">📚 角色库</label>
-                        <div class="character-list" id="all-chars"></div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">➕ 新建角色</label>
-                        <input type="text" class="form-input" id="new-char-name" placeholder="角色名称" style="min-height: 40px;">
-                        <button class="btn-action" onclick="createNewCharacter()" style="margin-top: 10px;">创建角色</button>
-                    </div>
-                </div>
-
-                <!-- 第3步：参数调整 -->
-                <div class="panel" id="panel-3">
-                    <div class="form-group">
-                        <label class="form-label">🧠 LLM 模型</label>
-                        <div class="option-group" id="llm-options">
-                            <button class="option-btn selected" data-value="qwen">通义千问</button>
-                            <button class="option-btn" data-value="deepseek">DeepSeek</button>
-                            <button class="option-btn" data-value="claude">Claude</button>
-                            <button class="option-btn" data-value="gpt4">GPT-4</button>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">🎬 生成模型</label>
-                        <div class="option-group" id="gen-options">
-                            <button class="option-btn selected" data-value="jimeng">即梦</button>
-                            <button class="option-btn" data-value="kuling">可灵</button>
-                            <button class="option-btn" data-value="hailu">海螺</button>
-                            <button class="option-btn" data-value="wanxiang">万相</button>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">🎨 艺术风格</label>
-                        <div class="option-group" id="style-options">
-                            <button class="option-btn selected" data-value="manga">日本漫画</button>
-                            <button class="option-btn" data-value="guoman">国风漫画</button>
-                            <button class="option-btn" data-value="3d">3D科幻</button>
-                            <button class="option-btn" data-value="western">欧美风格</button>
-                            <button class="option-btn" data-value="oil">油画艺术</button>
-                            <button class="option-btn" data-value="sketch">素描风格</button>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">📺 分辨率</label>
-                        <div class="option-group" id="res-options">
-                            <button class="option-btn" data-value="720">720p</button>
-                            <button class="option-btn selected" data-value="1080">1080p</button>
-                            <button class="option-btn" data-value="2k">2K</button>
-                            <button class="option-btn" data-value="4k">4K</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 第4步：高级选项 -->
-                <div class="panel" id="panel-4">
-                    <div class="form-group">
-                        <label class="form-label">⏱️ 每幕场景数</label>
-                        <input type="range" id="frame-count" min="2" max="12" value="6" style="width: 100%;">
-                        <div style="font-size: 12px; color: #6496ff; margin-top: 5px;">当前: <span id="frame-display">6 场景</span></div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">🎵 音乐配置</label>
-                        <div class="option-group" id="music-options">
-                            <button class="option-btn selected" data-value="auto">自动</button>
-                            <button class="option-btn" data-value="epic">史诗风格</button>
-                            <button class="option-btn" data-value="gentle">温和风格</button>
-                            <button class="option-btn" data-value="none">无音乐</button>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">📝 字幕配置</label>
-                        <div class="option-group" id="subtitle-options">
-                            <button class="option-btn selected" data-value="zh">中文</button>
-                            <button class="option-btn" data-value="en">英文</button>
-                            <button class="option-btn" data-value="dual">双语</button>
-                            <button class="option-btn" data-value="none">无字幕</button>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">🎬 输出格式</label>
-                        <div class="option-group" id="format-options">
-                            <button class="option-btn selected" data-value="mp4">MP4</button>
-                            <button class="option-btn" data-value="mov">MOV</button>
-                            <button class="option-btn" data-value="webm">WebM</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 右侧栏 -->
-        <div class="right-panel">
-            <div>
-                <h3 style="color: #6496ff; font-size: 13px; margin-bottom: 10px;">📊 项目预览</h3>
-                <div style="font-size: 12px; color: #a0a0ff; line-height: 1.8;">
-                    <div>字数: <span id="preview-words">0</span></div>
-                    <div>角色: <span id="preview-chars">0</span></div>
-                    <div>预估时长: <span id="preview-time">-</span></div>
-                </div>
-            </div>
-            <button class="btn-generate" onclick="generateMangaDrama()">🚀 生成漫剧</button>
+        <div class="region-tabs" id="regionTabs">
+            <button class="active" data-region="all">🌐 全部</button>
+            <button data-region="CN">🇨🇳 国内</button>
+            <button data-region="Global">🌍 国外</button>
         </div>
     </div>
+</header>
 
-    <!-- 新建项目对话框 -->
-    <div class="modal" id="modal-new-project">
-        <div class="modal-content">
-            <div class="modal-header">➕ 新建项目</div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label class="form-label">项目名称</label>
-                    <input type="text" class="form-input" id="input-project-name" placeholder="输入项目名称" style="min-height: 40px;">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">项目描述</label>
-                    <textarea class="form-input" id="input-project-desc" placeholder="输入项目描述"></textarea>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">📋 选择模板</label>
-                    <div class="template-grid" id="template-grid">
-                        <div class="template-card" onclick="applyTemplate('manga')">
-                            <div class="template-icon">🎌</div>
-                            <div class="template-name">日本漫画</div>
-                            <div class="template-desc">热血、少年</div>
-                        </div>
-                        <div class="template-card" onclick="applyTemplate('guoman')">
-                            <div class="template-icon">🏯</div>
-                            <div class="template-name">国风漫画</div>
-                            <div class="template-desc">武侠、古装</div>
-                        </div>
-                        <div class="template-card" onclick="applyTemplate('3d')">
-                            <div class="template-icon">🤖</div>
-                            <div class="template-name">3D科幻</div>
-                            <div class="template-desc">科幻、未来</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-secondary" onclick="closeModal('modal-new-project')">取消</button>
-                <button class="btn-primary" onclick="confirmNewProject()">创建</button>
-            </div>
-        </div>
+<!-- ========== Main ========== -->
+<main class="main">
+    <div class="submit-bar">
+        <button class="btn-submit" id="openSubmitBtn">➕ 提交新模型</button>
     </div>
 
-    <!-- 保存位置对话框 -->
-    <div class="modal" id="modal-save">
-        <div class="modal-content">
-            <div class="modal-header">💾 选择保存位置</div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label class="form-label">位置</label>
-                    <div class="option-group" id="location-options">
-                        <button class="option-btn selected" data-location="downloads">📥 下载</button>
-                        <button class="option-btn" data-location="desktop">🖥️ 桌面</button>
-                        <button class="option-btn" data-location="documents">📄 文档</button>
-                        <button class="option-btn" data-location="custom">📁 自定义</button>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">文件名</label>
-                    <input type="text" class="form-input" id="input-filename" style="min-height: 40px;">
-                </div>
-                <div style="font-size: 12px; color: #6496ff; margin-top: 10px;">
-                    保存位置: <span id="full-path">C:\Users\用户\Downloads\</span>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-secondary" onclick="closeModal('modal-save')">取消</button>
-                <button class="btn-primary" onclick="confirmSave()">保存</button>
-            </div>
-        </div>
+    <div class="stats-bar" id="statsBar">
+        <!-- JS 动态填充 -->
     </div>
 
-    <script>
-        // ========== 工具函数 ==========
-        function generateStars() {
-            const container = document.getElementById('stars');
-            for (let i = 0; i < 100; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.animationDelay = Math.random() * 3 + 's';
-                container.appendChild(star);
-            }
-        }
+    <div id="contentArea">
+        <!-- JS 动态渲染 -->
+    </div>
+</main>
 
-        function showMessage(msg) {
-            const div = document.createElement('div');
-            div.className = 'status-message';
-            div.textContent = msg;
-            document.body.appendChild(div);
-            setTimeout(() => div.remove(), 3000);
-        }
+<!-- ========== 提交/编辑 Modal ========== -->
+<div class="modal-overlay" id="formModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="modalTitle">📝 提交新模型</h3>
+            <button class="modal-close" id="closeModal">×</button>
+        </div>
+        <div class="modal-body">
+            <form id="toolForm">
+                <input type="hidden" id="editId">
 
-        function openModal(id) {
-            document.getElementById(id).classList.add('active');
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).classList.remove('active');
-        }
-
-        // ========== 数据管理 ==========
-        const AppState = {
-            projects: JSON.parse(localStorage.getItem('mf_projects')) || [],
-            characters: JSON.parse(localStorage.getItem('mf_characters')) || [
-                { id: 'char_1', name: '林诗雨', traits: ['神秘', '法师', '坚强'] },
-                { id: 'char_2', name: '秦云天', traits: ['热血', '骑士', '勇敢'] },
-                { id: 'char_3', name: '月影', traits: ['刺客', '邪恶', '聪慧'] },
-                { id: 'char_4', name: '苏晓晓', traits: ['温柔', '治愈', '善良'] },
-                { id: 'char_5', name: '李战天', traits: ['战神', '无敌', '热血'] }
-            ],
-            currentProject: null,
-            selectedChars: [],
-            selectedTemplate: null,
-            params: {
-                llm: 'qwen',
-                gen: 'jimeng',
-                style: 'manga',
-                res: '1080',
-                music: 'auto',
-                subtitle: 'zh',
-                format: 'mp4',
-                frameCount: 6
-            }
-        };
-
-        function saveState() {
-            localStorage.setItem('mf_projects', JSON.stringify(AppState.projects));
-            localStorage.setItem('mf_characters', JSON.stringify(AppState.characters));
-        }
-
-        // ========== UI 渲染 ==========
-        function renderProjects() {
-            const list = document.getElementById('projects-list');
-            list.innerHTML = AppState.projects.map(p => `
-                <div class="project-item ${p.id === AppState.currentProject?.id ? 'active' : ''}" 
-                     onclick="selectProject('${p.id}')">
-                    <div>${p.name}</div>
-                    <div style="font-size: 11px; color: #6496ff; margin-top: 4px;">${p.created}</div>
+                <div class="form-group">
+                    <label class="form-label">模型名称 <span class="required">*</span></label>
+                    <input type="text" class="form-input" id="fName" placeholder="如：DeepSeek Chat" required>
                 </div>
-            `).join('');
-        }
 
-        function renderCharacters() {
-            const selected = document.getElementById('selected-chars');
-            const all = document.getElementById('all-chars');
+                <div class="form-group">
+                    <label class="form-label">官网链接</label>
+                    <input type="url" class="form-input" id="fUrl" placeholder="https://...">
+                </div>
 
-            selected.innerHTML = AppState.selectedChars.map(id => {
-                const char = AppState.characters.find(c => c.id === id);
-                return `<button class="character-tag selected" onclick="toggleChar('${id}', true)">${char.name} ✓</button>`;
-            }).join('');
+                <div class="form-group">
+                    <label class="form-label">模型简介 <span class="required">*</span></label>
+                    <textarea class="form-textarea" id="fDesc" placeholder="简要描述模型的能力与特点..." required></textarea>
+                </div>
 
-            all.innerHTML = AppState.characters.map(c => `
-                <button class="character-tag ${AppState.selectedChars.includes(c.id) ? 'selected' : ''}" 
-                        onclick="toggleChar('${c.id}')">
-                    ${c.name}
-                </button>
-            `).join('');
+                <div class="form-group">
+                    <label class="form-label">所属地区 <span class="required">*</span></label>
+                    <select class="form-select" id="fRegion" required>
+                        <option value="">请选择地区</option>
+                        <option value="CN">🇨🇳 国内</option>
+                        <option value="Global">🌍 国外</option>
+                    </select>
+                </div>
 
-            updateRecommended();
-        }
+                <div class="form-group">
+                    <label class="form-label">能力标签（可多选）</label>
+                    <div class="tag-checkboxes" id="fTagsContainer">
+                        <label class="tag-checkbox-label"><input type="checkbox" value="文本"> 文本</label>
+                        <label class="tag-checkbox-label"><input type="checkbox" value="绘图"> 绘图</label>
+                        <label class="tag-checkbox-label"><input type="checkbox" value="代码"> 代码</label>
+                        <label class="tag-checkbox-label"><input type="checkbox" value="搜索"> 搜索</label>
+                        <label class="tag-checkbox-label"><input type="checkbox" value="视频"> 视频</label>
+                        <label class="tag-checkbox-label"><input type="checkbox" value="多模态"> 多模态</label>
+                        <label class="tag-checkbox-label"><input type="checkbox" value="推理"> 推理</label>
+                        <label class="tag-checkbox-label"><input type="checkbox" value="写作"> 写作</label>
+                    </div>
+                    <p class="form-note">💡 提交的数据仅保存在本地浏览器，不会同步到服务器</p>
+                </div>
 
-        function updateRecommended() {
-            const story = document.getElementById('story-input').value.toLowerCase();
-            const matched = [];
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" id="cancelForm">取消</button>
+                    <button type="submit" class="btn-primary" id="submitFormBtn">提交</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
-            AppState.characters.forEach(char => {
-                let score = 0;
-                char.traits.forEach(trait => {
-                    if (story.includes(trait)) score++;
-                });
-                if (score > 0) matched.push({ char, score });
-            });
+<!-- ========== Toast ========== -->
+<div class="toast" id="toast"></div>
 
-            matched.sort((a, b) => b.score - a.score);
+<script>
+/* ================================================
+   AI 模型数据库
+   ================================================ */
+const AI_TOOLS_DB = [
+    // ===== 国内模型 (CN) =====
+    { id: 'deepseek', name: 'DeepSeek', logo: '🔮', region: 'CN',
+      desc: '深度求索大模型，专注于通用人工智能，推理能力强，开源可本地部署。',
+      tags: ['推理', '代码', '文本'], url: 'https://www.deepseek.com' },
+    { id: 'kimi', name: 'Kimi（月之暗面）', logo: '🌙', region: 'CN',
+      desc: '支持20万字超长上下文，擅长多模态内容处理，AI助手产品体验优秀。',
+      tags: ['文本', '多模态', '写作'], url: 'https://kimi.moonshot.cn' },
+    { id: 'qwen', name: '通义千问', logo: '🐉', region: 'CN',
+      desc: '阿里云自研大模型，支持中英双语及多模态理解，开源版本可免费商用。',
+      tags: ['文本', '代码', '多模态'], url: 'https://tongyi.aliyun.com' },
+    { id: 'doubao', name: '豆包', logo: '🫛', region: 'CN',
+      desc: '字节跳动推出的大语言模型，集成语音交互、写作助手等多场景AI能力。',
+      tags: ['文本', '写作', '多模态'], url: 'https://www.doubao.com' },
+    { id: 'wenxin', name: '文心一言', logo: '🖌️', region: 'CN',
+      desc: '百度文心大模型，融合生成式AI与知识增强，覆盖对话、创作、代码全场景。',
+      tags: ['文本', '绘图', '代码'], url: 'https://yiyan.baidu.com' },
+    { id: 'zhipu', name: '智谱清言', logo: '✨', region: 'CN',
+      desc: '智谱AI自研ChatGLM，国产开源大模型标杆，支持128K超长上下文。',
+      tags: ['文本', '推理', '代码'], url: 'https://www.zhipuai.cn' },
+    { id: 'spark', name: '讯飞星火', logo: '🔥', region: 'CN',
+      desc: '科大讯飞认知大模型，语音交互能力突出，支持多语种翻译与语音合成。',
+      tags: ['文本', '语音', '多模态'], url: 'https://xinghuo.xfyun.cn' },
+    { id: 'hunyuan', name: '混元', logo: '🌊', region: 'CN',
+      desc: '腾讯混元大模型，深度整合微信/QQ生态，适合社交场景AI应用开发。',
+      tags: ['文本', '搜索', '多模态'], url: 'https://hunyuan.tencent.com' },
+    { id: 'minimax', name: 'MiniMax / 海螺', logo: '🐚', region: 'CN',
+      desc: '专注视频/语音生成的AI平台，海螺AI助手支持高质量AI语音对话与内容创作。',
+      tags: ['视频', '语音', '绘图'], url: 'https://www.minimax.io' },
 
-            const recommended = document.getElementById('recommended-chars');
-            recommended.innerHTML = matched.length > 0 
-                ? matched.map(m => `
-                    <button class="character-tag" onclick="toggleChar('${m.char.id}')">
-                        🎯 ${m.char.name} (${m.score}☆)
-                    </button>
-                `).join('')
-                : '<div style="color: #6496ff; font-size: 12px;">输入故事后会自动推荐角色</div>';
-        }
+    // ===== 国外模型 (Global) =====
+    { id: 'chatgpt', name: 'ChatGPT', logo: '💬', region: 'Global',
+      desc: 'OpenAI推出的GPT系列，文本生成与多轮对话的标杆产品，生态最为成熟。',
+      tags: ['文本', '代码', '写作'], url: 'https://chat.openai.com' },
+    { id: 'claude', name: 'Claude', logo: '🤖', region: 'Global',
+      desc: 'Anthropic推出的AI助手，以安全性著称，长文本理解与写作能力出众。',
+      tags: ['文本', '推理', '写作'], url: 'https://claude.ai' },
+    { id: 'gemini', name: 'Gemini', logo: '🌟', region: 'Global',
+      desc: 'Google多模态大模型，原生支持文本/图片/视频/音频，理解能力业界领先。',
+      tags: ['多模态', '搜索', '文本'], url: 'https://gemini.google.com' },
+    { id: 'copilot', name: 'Copilot', logo: '✈️', region: 'Global',
+      desc: 'Microsoft集成GPT-4的AI助手，深度嵌入Windows/Office/Edge全生态。',
+      tags: ['代码', '写作', '搜索'], url: 'https://copilot.microsoft.com' },
+    { id: 'llama', name: 'Llama', logo: '🦙', region: 'Global',
+      desc: 'Meta开源大模型家族，最大开源模型之一，可本地部署，社区生态丰富。',
+      tags: ['文本', '代码', '推理'], url: 'https://llama.meta.com' },
+    { id: 'perplexity', name: 'Perplexity', logo: '🔭', region: 'Global',
+      desc: 'AI驱动的新一代搜索引擎，实时联网，信息溯源，颠覆传统搜索体验。',
+      tags: ['搜索', '文本'], url: 'https://www.perplexity.ai' },
+    { id: 'midjourney', name: 'Midjourney', logo: '🎨', region: 'Global',
+      desc: '最强AI绘图工具之一，以艺术风格闻名，Discord社区驱动，持续迭代版本。',
+      tags: ['绘图'], url: 'https://www.midjourney.com' },
+    { id: 'stablediffusion', name: 'Stable Diffusion', logo: '🖼️', region: 'Global',
+      desc: 'Stability AI开源绘图模型，可本地部署，支持ControlNet等插件生态。',
+      tags: ['绘图'], url: 'https://stability.ai' },
+    { id: 'grok', name: 'Grok', logo: '🤔', region: 'Global',
+      desc: 'xAI推出的AI助手，实时信息获取能力强，回答风格幽默直接。',
+      tags: ['搜索', '文本', '推理'], url: 'https://x.ai/grok' },
+];
 
-        // ========== 事件处理 ==========
-        function switchTab(num) {
-            document.querySelectorAll('.tab').forEach((t, i) => {
-                t.classList.toggle('active', i + 1 === num);
-            });
-            document.querySelectorAll('.panel').forEach((p, i) => {
-                p.classList.toggle('active', i + 1 === num);
-            });
-        }
+/* ================================================
+   状态管理
+   ================================================ */
+const AppState = {
+    currentRegion: 'all',   // 'all' | 'CN' | 'Global'
+    searchQuery: '',
+    customTools: [],        // 从 localStorage 加载
+    editingId: null,
+};
 
-        function createNewProject() {
-            AppState.selectedTemplate = null;
-            document.getElementById('input-project-name').value = '';
-            document.getElementById('input-project-desc').value = '';
-            openModal('modal-new-project');
-        }
+/* ================================================
+   localStorage 键名（避免与旧版冲突）
+   ================================================ */
+const STORAGE_KEY = 'ai_hub_custom_tools_v2';
 
-        function confirmNewProject() {
-            const name = document.getElementById('input-project-name').value.trim() || '未命名项目';
-            const desc = document.getElementById('input-project-desc').value;
+/* ================================================
+   加载自定义工具
+   ================================================ */
+function loadCustomTools() {
+    try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        AppState.customTools = stored ? JSON.parse(stored) : [];
+    } catch (e) {
+        AppState.customTools = [];
+    }
+}
 
-            const project = {
-                id: 'proj_' + Date.now(),
-                name,
-                desc,
-                created: new Date().toLocaleDateString('zh-CN'),
-                template: AppState.selectedTemplate
-            };
+/* ================================================
+   保存自定义工具
+   ================================================ */
+function saveCustomTools() {
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(AppState.customTools));
+    } catch (e) { /* 存储满时静默失败 */ }
+}
 
-            AppState.projects.push(project);
-            AppState.currentProject = project;
-            AppState.selectedChars = [];
-            saveState();
-            renderProjects();
-            renderCharacters();
-            closeModal('modal-new-project');
-            showMessage(`✅ 项目 "${name}" 创建成功！`);
-        }
+/* ================================================
+   合并数据库（内置 + 用户自定义）
+   ================================================ */
+function getMergedTools() {
+    return [...AI_TOOLS_DB, ...AppState.customTools];
+}
 
-        function selectProject(id) {
-            AppState.currentProject = AppState.projects.find(p => p.id === id);
-            renderProjects();
-            showMessage(`✅ 切换到项目: ${AppState.currentProject.name}`);
-        }
+/* ================================================
+   搜索过滤
+   ================================================ */
+function filterTools(tools) {
+    const q = AppState.searchQuery.trim().toLowerCase();
+    let result = tools;
 
-        function toggleChar(id, remove = false) {
-            const idx = AppState.selectedChars.indexOf(id);
-            if (idx >= 0 && remove) {
-                AppState.selectedChars.splice(idx, 1);
-            } else if (idx < 0) {
-                AppState.selectedChars.push(id);
-            } else if (idx >= 0) {
-                AppState.selectedChars.splice(idx, 1);
-            } else {
-                AppState.selectedChars.push(id);
-            }
-            renderCharacters();
-            document.getElementById('preview-chars').textContent = AppState.selectedChars.length;
-        }
+    // 地区过滤
+    if (AppState.currentRegion !== 'all') {
+        result = result.filter(t => t.region === AppState.currentRegion);
+    }
 
-        function createNewCharacter() {
-            const name = document.getElementById('new-char-name').value.trim();
-            if (!name) {
-                showMessage('❌ 请输入角色名称');
-                return;
-            }
-
-            const char = {
-                id: 'char_' + Date.now(),
-                name,
-                traits: ['自定义角色']
-            };
-
-            AppState.characters.push(char);
-            AppState.selectedChars.push(char.id);
-            saveState();
-            renderCharacters();
-            document.getElementById('new-char-name').value = '';
-            showMessage(`✅ 角色 "${name}" 创建成功！`);
-        }
-
-        function optimizeStory(type) {
-            const text = document.getElementById('story-input').value;
-            if (!text.trim()) {
-                showMessage('❌ 请先输入故事');
-                return;
-            }
-            showMessage(`✨ 正在${type === 'expand' ? '扩展' : '简化'}故事...`);
-        }
-
-        function applyTemplate(template) {
-            AppState.selectedTemplate = template;
-            showMessage(`✅ 已选择模板: ${template}`);
-        }
-
-        function generateMangaDrama() {
-            if (!AppState.currentProject) {
-                showMessage('❌ 请先创建项目');
-                return;
-            }
-            if (!document.getElementById('story-input').value.trim()) {
-                showMessage('❌ 请先输入故事内容');
-                return;
-            }
-
-            document.getElementById('input-filename').value = (AppState.currentProject.name || '漫剧') + '.mp4';
-            openModal('modal-save');
-        }
-
-        function confirmSave() {
-            const filename = document.getElementById('input-filename').value.trim();
-            if (!filename) {
-                showMessage('❌ 请输入文件名');
-                return;
-            }
-
-            closeModal('modal-save');
-
-            // 模拟生成过程
-            const statusDiv = document.createElement('div');
-            statusDiv.className = 'status-message';
-            statusDiv.innerHTML = '🚀 正在生成漫剧...<div class="progress-bar"><div class="progress-fill"></div></div>';
-            document.body.appendChild(statusDiv);
-
-            setTimeout(() => {
-                const path = document.getElementById('full-path').textContent + filename;
-                
-                // 生成真实的 MP4 视频文件（模拟）
-                // 这里我们创建一个简单的视频文件头
-                const mp4Header = new Uint8Array([
-                    0x00, 0x00, 0x00, 0x20, 0x66, 0x74, 0x79, 0x70, 0x69, 0x73, 0x6f, 0x6d, 0x00, 0x00, 0x02, 0x00,
-                    0x69, 0x73, 0x6f, 0x6d, 0x69, 0x73, 0x6f, 0x32, 0x6d, 0x70, 0x34, 0x31
-                ]);
-
-                // 添加模拟的视频数据
-                const simulatedVideoData = new Uint8Array(1024 * 100); // 100KB 的模拟视频数据
-                for (let i = 0; i < simulatedVideoData.length; i++) {
-                    simulatedVideoData[i] = Math.random() * 256;
-                }
-
-                // 合并数据
-                const fullData = new Uint8Array(mp4Header.length + simulatedVideoData.length);
-                fullData.set(mp4Header, 0);
-                fullData.set(simulatedVideoData, mp4Header.length);
-
-                // 创建 Blob 并下载
-                const blob = new Blob([fullData], { type: 'video/mp4' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = filename;
-                a.click();
-
-                // 清理
-                URL.revokeObjectURL(url);
-
-                statusDiv.remove();
-                showMessage(`✅ 漫剧已保存到: ${path}`);
-            }, 3000);
-        }
-
-        // ========== 初始化 ==========
-        document.addEventListener('DOMContentLoaded', () => {
-            generateStars();
-            renderProjects();
-            renderCharacters();
-
-            // 更新预览
-            document.getElementById('story-input').addEventListener('input', () => {
-                const text = document.getElementById('story-input').value;
-                document.getElementById('preview-words').textContent = text.length;
-                updateRecommended();
-            });
-
-            // 帧数滑块
-            document.getElementById('frame-count').addEventListener('input', (e) => {
-                AppState.params.frameCount = e.target.value;
-                document.getElementById('frame-display').textContent = e.target.value + ' 场景';
-            });
-
-            // 参数选择 - 第3步
-            document.querySelectorAll('#llm-options .option-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('#llm-options .option-btn').forEach(b => b.classList.remove('selected'));
-                    this.classList.add('selected');
-                    AppState.params.llm = this.dataset.value;
-                });
-            });
-
-            document.querySelectorAll('#gen-options .option-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('#gen-options .option-btn').forEach(b => b.classList.remove('selected'));
-                    this.classList.add('selected');
-                    AppState.params.gen = this.dataset.value;
-                });
-            });
-
-            document.querySelectorAll('#style-options .option-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('#style-options .option-btn').forEach(b => b.classList.remove('selected'));
-                    this.classList.add('selected');
-                    AppState.params.style = this.dataset.value;
-                });
-            });
-
-            document.querySelectorAll('#res-options .option-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('#res-options .option-btn').forEach(b => b.classList.remove('selected'));
-                    this.classList.add('selected');
-                    AppState.params.res = this.dataset.value;
-                });
-            });
-
-            // 高级选项 - 第4步
-            document.querySelectorAll('#music-options .option-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('#music-options .option-btn').forEach(b => b.classList.remove('selected'));
-                    this.classList.add('selected');
-                    AppState.params.music = this.dataset.value;
-                    showMessage(`✅ 音乐设置: ${this.textContent}`);
-                });
-            });
-
-            document.querySelectorAll('#subtitle-options .option-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('#subtitle-options .option-btn').forEach(b => b.classList.remove('selected'));
-                    this.classList.add('selected');
-                    AppState.params.subtitle = this.dataset.value;
-                    showMessage(`✅ 字幕设置: ${this.textContent}`);
-                });
-            });
-
-            document.querySelectorAll('#format-options .option-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('#format-options .option-btn').forEach(b => b.classList.remove('selected'));
-                    this.classList.add('selected');
-                    AppState.params.format = this.dataset.value;
-                    showMessage(`✅ 格式设置: ${this.textContent}`);
-                });
-            });
-
-            // 保存位置选择
-            document.querySelectorAll('#location-options .option-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('#location-options .option-btn').forEach(b => b.classList.remove('selected'));
-                    this.classList.add('selected');
-
-                    const paths = {
-                        'downloads': 'C:\\Users\\用户\\Downloads\\',
-                        'desktop': 'C:\\Users\\用户\\Desktop\\',
-                        'documents': 'C:\\Users\\用户\\Documents\\',
-                        'custom': 'C:\\自定义位置\\'
-                    };
-                    document.getElementById('full-path').textContent = paths[this.dataset.location];
-                });
-            });
+    // 搜索过滤（名称 / 简介 / 标签 / 地区关键词）
+    if (q.length >= 1) {
+        const keywords = q.split(/\s+/); // 支持"国内 绘图"类搜索
+        result = result.filter(t => {
+            const haystack = [
+                t.name, t.desc,
+                ...(t.tags || []),
+                t.region === 'CN' ? '国内' : '国外',
+                t.region,
+            ].join(' ').toLowerCase();
+            return keywords.every(kw => haystack.includes(kw));
         });
-    </script>
+    }
+
+    return result;
+}
+
+/* ================================================
+   统计栏渲染
+   ================================================ */
+function renderStats(total, filtered, customCount) {
+    const bar = document.getElementById('statsBar');
+    bar.innerHTML = `
+        共 <strong>${total}</strong> 个模型
+        &nbsp;·&nbsp;
+        <strong>${customCount}</strong> 个用户提交
+        ${filtered !== total ? `&nbsp;·&nbsp; 已筛选 <strong>${filtered}</strong> 个` : ''}
+    `;
+}
+
+/* ================================================
+   单个卡片渲染
+   ================================================ */
+function renderCard(tool, isCustom) {
+    const regionLabel = tool.region === 'CN' ? '🇨🇳 国内' : '🌍 国外';
+    const regionClass = tool.region === 'CN' ? 'badge-cn' : 'badge-global';
+    const tagsHtml = (tool.tags || []).map(tag => `<span class="card-tag">${tag}</span>`).join('');
+
+    const editBtn = isCustom
+        ? `<button class="card-action-btn btn-edit" data-id="${tool.id}" onclick="openEditModal('${tool.id}')">编辑</button>`
+        : '';
+    const reportBtn = !isCustom
+        ? `<button class="card-action-btn btn-report" onclick="showToast('已记录报错信息，感谢反馈！', 'warn')">报错</button>`
+        : '';
+
+    return `
+    <div class="card" id="card-${tool.id}">
+        <div class="card-actions">${editBtn}${reportBtn}</div>
+        <div class="card-top">
+            <div class="card-logo" style="background:${tool.region === 'CN' ? 'rgba(248,81,73,0.15)' : 'rgba(88,166,255,0.15)'}">
+                ${tool.logo}
+            </div>
+            <div class="card-info">
+                <div class="card-name">${tool.name}${isCustom ? ' ⭐' : ''}</div>
+                <div class="card-meta">
+                    <span class="card-badge ${regionClass}">${regionLabel}</span>
+                </div>
+            </div>
+        </div>
+        <div class="card-tags">${tagsHtml}</div>
+        <div class="card-desc">${tool.desc}</div>
+        ${tool.url ? `<div class="card-links"><a class="card-link" href="${tool.url}" target="_blank" rel="noopener">🔗 访问官网</a></div>` : ''}
+    </div>`;
+}
+
+/* ================================================
+   主内容渲染（双栏 / 单列自适应）
+   ================================================ */
+function renderContent() {
+    const all = getMergedTools();
+    const filtered = filterTools(all);
+    const customCount = AppState.customTools.length;
+
+    renderStats(all.length, filtered.length, customCount);
+
+    const content = document.getElementById('contentArea');
+
+    if (filtered.length === 0) {
+        content.innerHTML = `
+            <div class="empty-state">
+                <div class="emoji">🔍</div>
+                <p>没有找到匹配的模型，试试其他关键词</p>
+            </div>`;
+        return;
+    }
+
+    // 全部视图：双栏
+    if (AppState.currentRegion === 'all') {
+        const cnTools = filtered.filter(t => t.region === 'CN');
+        const globalTools = filtered.filter(t => t.region === 'Global');
+
+        const cnCards = cnTools.map(t => renderCard(t, isCustomTool(t.id))).join('');
+        const globalCards = globalTools.map(t => renderCard(t, isCustomTool(t.id))).join('');
+
+        content.innerHTML = `
+            <div class="dual-columns">
+                <div class="column-section">
+                    <div class="column-header cn">
+                        <span>🇨🇳</span>
+                        <h2>国内模型</h2>
+                        <span class="count">${cnTools.length}</span>
+                    </div>
+                    ${cnCards || '<div class="empty-state"><p>无匹配结果</p></div>'}
+                </div>
+                <div class="column-section">
+                    <div class="column-header global">
+                        <span>🌍</span>
+                        <h2>国外模型</h2>
+                        <span class="count">${globalTools.length}</span>
+                    </div>
+                    ${globalCards || '<div class="empty-state"><p>无匹配结果</p></div>'}
+                </div>
+            </div>`;
+    }
+    // 筛选视图：单列网格
+    else {
+        const label = AppState.currentRegion === 'CN' ? '🇨🇳 国内模型' : '🌍 国外模型';
+        const cards = filtered.map(t => renderCard(t, isCustomTool(t.id))).join('');
+        content.innerHTML = `
+            <div class="single-column">
+                <div class="column-header ${AppState.currentRegion === 'CN' ? 'cn' : 'global'}">
+                    <span>${label}</span>
+                    <span class="count">${filtered.length}</span>
+                </div>
+                <div class="tools-grid">${cards}</div>
+            </div>`;
+    }
+}
+
+/* ================================================
+   判断是否为用户自定义工具
+   ================================================ */
+function isCustomTool(id) {
+    return AppState.customTools.some(t => t.id === id);
+}
+
+/* ================================================
+   Toast 提示
+   ================================================ */
+function showToast(message, type = 'success') {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.className = 'toast ' + (type === 'warn' ? 'warn' : '');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+/* ================================================
+   Modal 控制
+   ================================================ */
+function openSubmitModal() {
+    AppState.editingId = null;
+    document.getElementById('modalTitle').textContent = '📝 提交新模型';
+    document.getElementById('submitFormBtn').textContent = '提交';
+    document.getElementById('toolForm').reset();
+    document.getElementById('editId').value = '';
+    clearTagSelection();
+    document.getElementById('formModal').classList.add('show');
+}
+
+function openEditModal(id) {
+    const tool = AppState.customTools.find(t => t.id === id);
+    if (!tool) return;
+
+    AppState.editingId = id;
+    document.getElementById('modalTitle').textContent = '✏️ 编辑模型';
+    document.getElementById('submitFormBtn').textContent = '保存修改';
+    document.getElementById('editId').value = id;
+    document.getElementById('fName').value = tool.name;
+    document.getElementById('fUrl').value = tool.url || '';
+    document.getElementById('fDesc').value = tool.desc;
+    document.getElementById('fRegion').value = tool.region;
+
+    // 恢复标签选中状态
+    clearTagSelection();
+    (tool.tags || []).forEach(tag => {
+        const label = document.querySelector(`#fTagsContainer label:has(input[value="${tag}"])`);
+        if (label) {
+            label.classList.add('checked');
+            label.querySelector('input').checked = true;
+        }
+    });
+
+    document.getElementById('formModal').classList.add('show');
+}
+
+function closeModal() {
+    document.getElementById('formModal').classList.remove('show');
+    AppState.editingId = null;
+}
+
+/* ================================================
+   标签多选 UI
+   ================================================ */
+function clearTagSelection() {
+    document.querySelectorAll('#fTagsContainer label').forEach(label => {
+        label.classList.remove('checked');
+        label.querySelector('input').checked = false;
+    });
+}
+
+/* ================================================
+   表单提交
+   ================================================ */
+document.getElementById('toolForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const name = document.getElementById('fName').value.trim();
+    const url = document.getElementById('fUrl').value.trim();
+    const desc = document.getElementById('fDesc').value.trim();
+    const region = document.getElementById('fRegion').value;
+    const tags = Array.from(
+        document.querySelectorAll('#fTagsContainer input:checked')
+    ).map(cb => cb.value);
+
+    if (!name || !desc || !region) {
+        showToast('请填写必填项（名称、简介、地区）', 'warn');
+        return;
+    }
+
+    const toolData = {
+        id: AppState.editingId || 'custom_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+        name,
+        logo: '📦',
+        region,
+        desc,
+        tags,
+        url,
+        isCustom: true,
+    };
+
+    if (AppState.editingId) {
+        // 更新
+        const idx = AppState.customTools.findIndex(t => t.id === AppState.editingId);
+        if (idx !== -1) AppState.customTools[idx] = toolData;
+        showToast('✅ 模型信息已更新！');
+    } else {
+        // 新增
+        AppState.customTools.push(toolData);
+        showToast('✅ 提交成功！模型已添加到列表（仅本地可见）', 'warn');
+    }
+
+    saveCustomTools();
+    closeModal();
+    renderContent();
+});
+
+/* ================================================
+   标签点击事件（事件委托）
+   ================================================ */
+document.getElementById('fTagsContainer').addEventListener('click', function (e) {
+    const label = e.target.closest('label.tag-checkbox-label');
+    if (!label) return;
+    const cb = label.querySelector('input');
+    cb.checked = !cb.checked;
+    label.classList.toggle('checked', cb.checked);
+});
+
+/* ================================================
+   地区 Tab 切换
+   ================================================ */
+document.getElementById('regionTabs').addEventListener('click', function (e) {
+    const btn = e.target.closest('button[data-region]');
+    if (!btn) return;
+    document.querySelectorAll('#regionTabs button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    AppState.currentRegion = btn.dataset.region;
+    renderContent();
+});
+
+/* ================================================
+   搜索输入
+   ================================================ */
+const searchInput = document.getElementById('searchInput');
+searchInput.addEventListener('input', function () {
+    AppState.searchQuery = this.value;
+    renderContent();
+});
+searchInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+        this.value = '';
+        AppState.searchQuery = '';
+        renderContent();
+    }
+});
+
+/* ================================================
+   Modal 关闭事件
+   ================================================ */
+document.getElementById('closeModal').addEventListener('click', closeModal);
+document.getElementById('cancelForm').addEventListener('click', closeModal);
+document.getElementById('formModal').addEventListener('click', function (e) {
+    if (e.target === this) closeModal();
+});
+
+/* ================================================
+   提交按钮
+   ================================================ */
+document.getElementById('openSubmitBtn').addEventListener('click', openSubmitModal);
+
+/* ================================================
+   初始化
+   ================================================ */
+loadCustomTools();
+renderContent();
+</script>
 </body>
 </html>
