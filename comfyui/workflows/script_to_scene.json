@@ -1,0 +1,25 @@
+{
+  "1": {
+    "inputs": {
+      "script_text": "${script_text}",
+      "style_preset": "${style_preset:-comic}",
+      "num_scenes": "${num_scenes:-10}"
+    },
+    "class_type": "LLMScriptGenerator"
+  },
+  "2": {
+    "inputs": {
+      "scene_data": ["1", 0]
+    },
+    "class_type": "SceneParser"
+  },
+  "3": {
+    "inputs": {
+      "prompt": "${prompt:-}",
+      "scene_description": ["2", 0],
+      "width": "${width:-1024}",
+      "height": "${height:-1024}"
+    },
+    "class_type": "PromptEnhancer"
+  }
+}

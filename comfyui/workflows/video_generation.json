@@ -1,0 +1,77 @@
+{
+  "1": {
+    "inputs": {
+      "image_url": "${image_url}",
+      "width": "${width:-1024}",
+      "height": "${height:-1024}"
+    },
+    "class_type": "LoadImage"
+  },
+  "2": {
+    "inputs": {
+      "ckpt_name": "ltx-video-2b.safetensors"
+    },
+    "class_type": "UNETLoader"
+  },
+  "3": {
+    "inputs": {
+      "seed": "${seed:-123456789}",
+      "steps": "${steps:-20}",
+      "cfg": "${cfg_scale:-7.5}",
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1,
+      "model": ["2", 0],
+      "positive": ["4", 0],
+      "negative": ["5", 0],
+      "latent_image": ["6", 0]
+    },
+    "class_type": "KSampler"
+  },
+  "4": {
+    "inputs": {
+      "text": "high quality, detailed, 4k, cinematic, ${prompt:-}",
+      "clip": ["2", 1]
+    },
+    "class_type": "CLIPTextEncode"
+  },
+  "5": {
+    "inputs": {
+      "text": "low quality, blurry, deformed, ugly",
+      "clip": ["2", 1]
+    },
+    "class_type": "CLIPTextEncode"
+  },
+  "6": {
+    "inputs": {
+      "width": "${width:-1024}",
+      "height": "${height:-1024}",
+      "batch_size": 1,
+      "frames": "${frames:-72}"
+    },
+    "class_type": "EmptyLatentVideo"
+  },
+  "7": {
+    "inputs": {
+      "samples": ["3", 0],
+      "vae": ["2", 2]
+    },
+    "class_type": "VAEDecode"
+  },
+  "8": {
+    "inputs": {
+      "filename_prefix": "video_${project_id:-unknown}_scene_${scene_id:-0}",
+      "images": ["7", 0],
+      "fps": "${fps:-24}"
+    },
+    "class_type": "SaveAnimatedWEBP"
+  },
+  "9": {
+    "inputs": {
+      "enable_lipsync": "${enable_lipsync:-false}",
+      "audio_url": "${audio_url:-}",
+      "video_frames": ["7", 0]
+    },
+    "class_type": "LipSync"
+  }
+}
