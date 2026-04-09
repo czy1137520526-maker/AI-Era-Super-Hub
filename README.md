@@ -1,254 +1,111 @@
-# ManjuFlow AI - 漫剧智造局
+# 🤖 AI Era Super-Hub — 国内外 AI 模型导航
 
-> 从"剧本输入"到"动态漫剧成片"的全自动化 AI 制作平台
+> 一站式发现、对比、直达国内外主流 AI 模型，支持地区分类、搜索过滤与用户自定义提交
 
-## 项目概述
+## 项目简介
 
-ManjuFlow AI 是一个基于 Web 的 SaaS 平台,通过 AI 技术解决角色/画风一致性问题,并提供完整的多模态流程闭环。
+**AI Era Super-Hub** 是一个纯静态的 AI 模型导航网站（单文件 `index.html`），帮助用户快速找到并访问国内外主流大语言模型、绘图模型等 AI 工具。无需后端，部署极简，打开即用。
 
-## 核心功能
+## ✨ 核心功能
 
-- 📝 **剧本与分镜智能工坊** - LLM 驱动的结构化剧本生成,支持拖拽排序
-- 🎭 **角色与资产一致性中心** - LoRA 训练 + IP-Adapter + FaceID,确保跨镜头一致性
-- 🎨 **高精度画面生成引擎** - ComfyUI 工作流集成,ControlNet 控制,批量生成
-- 🎬 **动态化与视频合成** - LTX-2.3,唇形同步,自动运镜
-- 🎵 **多模态配音与音效** - TTS 情感配音,AI BGM,字幕对齐
-- ✂️ **智能剪辑与发布** - 时间轴非线性编辑器,一键渲染 MP4
-- 🔗 **节点式工作流编辑器** - React Flow 可视化节点编辑,预设模板
-- 📊 **实时进度推送** - WebSocket 实时任务进度更新
+- 🇨🇳🌍 **国内外分类展示** — 内置 region 字段，默认双栏并排展示国内与国外模型
+- 🔍 **多维搜索** — 支持按名称、简介、标签、地区关键词搜索（如：输入「国内 绘图」精准筛选）
+- 🏷️ **地区筛选 Tab** — 全部 / 国内 / 国外 三档快速切换
+- ➕ **用户提交模型** — 表单支持填写名称、官网、简介、地区、能力标签，数据本地持久化
+- ✏️ **编辑 / 报错** — 卡片悬停即可对自定义模型编辑，对内置模型一键反馈报错
+- 📱 **全响应式** — 桌面 / 平板 / 手机三档断点，移动端友好
 
-## 技术栈
+## 🗂️ 预置模型数据
 
-### 前端
-- **框架**: Next.js 15 (App Router)
-- **语言**: TypeScript
-- **样式**: Tailwind CSS + Framer Motion
-- **组件**: shadcn/ui + React Flow
-- **状态管理**: React Hooks + Zustand
+### 🇨🇳 国内模型
 
-### 后端
-- **框架**: FastAPI (Python)
-- **异步任务**: Celery + Redis
-- **AI 引擎**: ComfyUI (WebSocket API)
-- **编排**: LangChain
+| 模型 | 公司 | 能力标签 |
+|------|------|----------|
+| DeepSeek | 深度求索 | 推理、代码、文本 |
+| Kimi（月之暗面） | 月之暗面 | 文本、多模态、写作 |
+| 通义千问 | 阿里云 | 文本、代码、多模态 |
+| 豆包 | 字节跳动 | 文本、写作、多模态 |
+| 文心一言 | 百度 | 文本、绘图、代码 |
+| 智谱清言 | 智谱AI | 文本、推理、代码 |
+| 讯飞星火 | 科大讯飞 | 文本、语音、多模态 |
+| 混元 | 腾讯 | 文本、搜索、多模态 |
+| MiniMax / 海螺 | MiniMax | 视频、语音、绘图 |
 
-### 数据库
-- **主数据库**: PostgreSQL (用户/项目数据)
-- **向量数据库**: Pinecone/Milvus (风格/角色检索)
-- **对象存储**: MinIO (图片/视频)
-- **缓存**: Redis (任务队列/缓存)
+### 🌍 国外模型
 
-### 基础设施
-- **容器**: Docker + Docker Compose
-- **编排**: Kubernetes (预留)
-- **GPU**: NVIDIA A100/H100 集成
+| 模型 | 公司 | 能力标签 |
+|------|------|----------|
+| ChatGPT | OpenAI | 文本、代码、写作 |
+| Claude | Anthropic | 文本、推理、写作 |
+| Gemini | Google | 多模态、搜索、文本 |
+| Copilot | Microsoft | 代码、写作、搜索 |
+| Llama | Meta | 文本、代码、推理 |
+| Perplexity | Perplexity AI | 搜索、文本 |
+| Midjourney | Midjourney | 绘图 |
+| Stable Diffusion | Stability AI | 绘图 |
+| Grok | xAI | 搜索、文本、推理 |
 
-## 项目结构
+## 🚀 快速开始
 
-```
-manjuflow-ai/
-├── frontend/          # Next.js 前端项目
-│   ├── src/
-│   │   ├── app/      # 页面路由
-│   │   ├── components/ # React 组件
-│   │   └── lib/      # 工具库
-│   ├── package.json
-│   └── tsconfig.json
-├── backend/           # FastAPI 后端项目
-│   ├── app/
-│   │   ├── api/      # API 路由
-│   │   ├── models/   # ORM 模型
-│   │   ├── schemas/  # Pydantic 模型
-│   │   ├── services/ # 业务逻辑
-│   │   └── workers/  # Celery 任务
-│   ├── requirements.txt
-│   └── main.py
-├── comfyui/           # ComfyUI 工作流配置
-│   └── workflows/     # JSON 工作流
-├── docker/            # Docker 配置
-│   └── docker-compose.yml
-├── k8s/              # Kubernetes 配置
-├── db/               # 数据库脚本
-│   └── schema.sql
-├── .env              # 环境变量
-├── start-dev.ps1      # 交互式启动脚本
-├── TESTING_GUIDE.md   # 测试和开发指南
-└── README.md
-```
-
-## 快速开始
-
-### 前置要求
-
-- Docker & Docker Compose (推荐)
-- Node.js 18+
-- Python 3.10+
-- GPU (NVIDIA,推荐 A100/H100)
-
-### 🚀 一键启动 (Windows PowerShell)
-
-```powershell
-# 运行交互式启动脚本
-.\start-dev.ps1
-```
-
-### 📝 详细步骤
-
-#### 方式一: 使用 Docker Compose (推荐)
+无需安装任何依赖，直接打开 `index.html` 即可在浏览器运行。
 
 ```bash
-# 1. 启动所有服务
-cd docker
-docker-compose up -d
+# 克隆仓库
+git clone https://github.com/czy1137520526-maker/AI-Era-Super-Hub.git
 
-# 2. 初始化数据库
-docker exec -it manjuflow-postgres psql -U manju -d manjuflow -f /docker-entrypoint-initdb.d/schema.sql
-
-# 3. 启动后端 (在新终端)
-cd ../backend
-.\start-backend.ps1
-
-# 4. 启动 Celery Worker (在新终端)
-.\start-celery.ps1
-
-# 5. 启动前端 (在新终端)
-cd ../frontend
-.\start-frontend.ps1
+# 直接用浏览器打开
+open index.html        # macOS
+start index.html       # Windows
+xdg-open index.html    # Linux
 ```
 
-#### 方式二: 本地开发 (不使用 Docker)
-
-```bash
-# 1. 安装依赖
-# Backend
-cd backend
-python -m venv venv
-.\venv\Scripts\activate
-pip install -r requirements.txt
-
-# Frontend
-cd ../frontend
-npm install
-
-# 2. 启动服务
-# Terminal 1 - Backend
-cd backend
-.\venv\Scripts\activate
-python -m app.main
-
-# Terminal 2 - Celery
-cd backend
-.\venv\Scripts\activate
-celery -A app.workers.celery_app worker
-
-# Terminal 3 - Frontend
-cd frontend
-npm run dev
-```
-
-### 访问地址
-
-- 🎨 **前端应用**: http://localhost:3000
-- 🔌 **后端 API**: http://localhost:8000
-- 📚 **API 文档**: http://localhost:8000/docs
-- 📊 **ComfyUI**: http://localhost:8188
-- 🗄️ **MinIO Console**: http://localhost:9001
-
-### 🧪 测试 API
-
-```powershell
-# 运行 API 测试脚本
-.\test-api.ps1
-```
-
-### 📖 详细文档
-
-- **测试和开发指南**: [TESTING_GUIDE.md](TESTING_GUIDE.md)
-- **项目总结**: [PROJECT_SUMMARY.md](PROJECT_SUMMARY.md)
-
-## 核心设计
-
-### 架构原则
-
-1. **无状态后端** - 便于横向扩展 GPU 节点
-2. **异步优先** - 所有 AI 任务通过 Celery 异步处理
-3. **强一致性** - Project -> Character -> LoRA 强关联
-4. **可视化编辑** - React Flow 节点编辑器 + 预设模板
-5. **实时反馈** - WebSocket 进度推送
-
-### 数据流
+## 📁 项目结构
 
 ```
-用户输入 → 剧本生成 → 分镜解析 → 角色训练 → 画面生成 → 视频合成 → 导出
-    ↓          ↓          ↓          ↓          ↓          ↓          ↓
-  LLM      JSON解析   LoRA训练   ComfyUI    LTX-2.3     FFmpeg    MP4
+AI-Era-Super-Hub/
+├── index.html          # 网站主文件（全部功能集成于此）
+├── .env.example        # 环境变量模板（供参考，静态站无需配置）
+├── README.md           # 项目说明
+└── .gitignore          # Git 忽略规则
 ```
 
-## 开发指南
+## 🛠️ 技术实现
 
-### 后端开发
+- **纯原生 HTML / CSS / JavaScript** — 零依赖，无框架，无构建步骤
+- **localStorage** — 用户自定义提交的模型数据本地持久化（键：`ai_hub_custom_tools_v2`）
+- **响应式布局** — CSS Grid + Media Query，支持 900 / 600 / 380px 三档断点
+- **实时搜索** — 关键词拆分后对 name / desc / tags / region 多字段联合匹配
 
-```bash
-cd backend
-# 运行测试
-pytest
-# 代码格式化
-black app/
-# 类型检查
-mypy app/
+## 📦 数据格式
+
+每个模型条目的数据结构如下：
+
+```js
+{
+  id: 'deepseek',           // 唯一标识符
+  name: 'DeepSeek',         // 显示名称
+  logo: '🔮',               // 展示 emoji
+  region: 'CN',             // 'CN' 国内 | 'Global' 国外
+  desc: '...',              // 简介
+  tags: ['推理', '代码'],    // 能力标签
+  url: 'https://...'        // 官网链接
+}
 ```
 
-### 前端开发
+## 🤝 贡献方式
 
-```bash
-cd frontend
-# 运行测试
-npm test
-# 类型检查
-npm run type-check
-# 构建
-npm run build
-```
+1. Fork 本仓库
+2. 创建特性分支（`git checkout -b feat/add-new-model`）
+3. 在 `index.html` 的 `AI_TOOLS_DB` 数组中按格式添加模型数据
+4. 提交并推送（`git commit -m 'feat: 添加 xxx 模型'`）
+5. 发起 Pull Request
 
-### ComfyUI 工作流
+也可以直接在网页上使用「➕ 提交新模型」功能，在本地添加模型。
 
-工作流配置位于 `comfyui/workflows/` 目录,可通过 ComfyUI 可视化编辑器导出。
+## 📄 许可证
 
-## 部署
-
-### Docker Compose
-
-```bash
-cd docker
-docker-compose up -d
-```
-
-### Kubernetes
-
-```bash
-kubectl apply -f k8s/deployments/
-kubectl apply -f k8s/services/
-kubectl apply -f k8s/ingress/
-```
-
-## 贡献指南
-
-1. Fork 项目
-2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 开启 Pull Request
-
-## 许可证
-
-MIT License - 详见 LICENSE 文件
-
-## 联系我们
-
-- 项目主页: https://github.com/manjuflow/manjuflow-ai
-- 文档: https://docs.manjuflow.ai
-- 邮箱: contact@manjuflow.ai
+MIT License
 
 ---
 
-**ManjuFlow AI** - 让 AI 漫剧创作更简单 🚀
+**AI Era Super-Hub** — 让发现 AI 工具更简单 🚀
